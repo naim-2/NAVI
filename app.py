@@ -1,7 +1,11 @@
 from flask import Flask, render_template, Response
 import requests
 import cv2
+from gtts import gTTS
+import pygame
+import time
 import numpy as np
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -11,6 +15,9 @@ endpoint = "https://nsalim-vision-api.cognitiveservices.azure.com/"
 
 # Video feed (replace 0 with the camera index if using a webcam)
 video_feed = 0
+
+# Initialize pygame mixer
+pygame.mixer.init()
 
 def analyze_frame(frame):
     # Convert the frame to bytes
@@ -42,6 +49,7 @@ def analyze_frame(frame):
 
 def generate_frames():
     cap = cv2.VideoCapture(video_feed)
+    audio_timer = time.time()
 
     while True:
         success, frame = cap.read()
@@ -52,9 +60,23 @@ def generate_frames():
 
             # Display the analysis results
             if 'description' in results:
-                print(results)
                 description = results['description']['captions'][0]['text']
                 cv2.putText(frame, f"Description: {description}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+
+                # Check if 3 seconds have passed since the last audio generation
+                if time.time() - audio_timer >= 3:
+                    # Convert description to speech
+                    tts = gTTS(text=description, lang='en', slow=False)
+                    current_datetime = datetime.now()
+                    current_time = current_datetime.timestamp()
+                    tts.save('static/output'+str(current_time)+'.mp3')
+
+                    # Play the generated audio using pygame mixer
+                    pygame.mixer.music.load('static/output'+str(current_time)+'.mp3')
+                    pygame.mixer.music.play()
+
+                    # Reset the timer
+                    audio_timer = time.time()
 
             # Encode the frame to JPEG format
             _, buffer = cv2.imencode('.jpg', frame)

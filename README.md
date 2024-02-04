@@ -17,4 +17,4 @@ git clone https://github.com/naim-2/NAVI.git
 5. Run the following command to install the necessary libraries through the terminal: pip install -r requirements.txt
 6. Run the project using the following command through the terminal: python app.py
 7. Open th project on your desired browser engine through the link generated on the terminal (it's mostly going to be: http://localhost:5000/).
-8. Interact with the webcam to see different results. 
+8. Interact with the webcam to see different results through audio.
