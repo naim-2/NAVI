@@ -3,4 +3,5 @@ requests
 opencv-python
 numpy
 gtts
+pygame
 gunicorn
