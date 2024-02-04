@@ -1,15 +1,14 @@
-from flask import Flask, render_template, Response, request, jsonify, send_file
+from flask import Flask, render_template, Response
 import requests
 import cv2
 from gtts import gTTS
 import pygame
 import time
-import numpy as np
 from datetime import datetime
-import os
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import io
 from io import BytesIO
+import os
 
 app = Flask(__name__)
 
@@ -20,6 +19,8 @@ endpoint = "https://nsalim-vision-api.cognitiveservices.azure.com/"
 account_name = "audi0st0rage"
 account_key = "bPht9P5/RhhOd/zU0o/y5Cct3OgjG1dtJwBhdi4TV25zjfgJ3OaK8D70HtPrP0Avg83bEEQRjh8x+ASt57IZvw=="
 container_name = "audio-files"
+
+os.environ['ALSA_CARD'] = 'dummy'
 
 # Create a BlobServiceClient
 blob_service_client = BlobServiceClient(account_url=f"https://{account_name}.blob.core.windows.net", credential=account_key)
@@ -73,9 +74,8 @@ def generate_frames():
             # Display the analysis results
             if 'description' in results:
                 description = results['description']['captions'][0]['text']
-                # cv2.putText(frame, f"Description: {description}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-                # Check if 3 seconds have passed since the last audio generation
+                # Check if 1 second have passed since the last audio generation
                 if time.time() - audio_timer >= 1:
                     # Convert description to speech
                     tts = gTTS(text="There is "+description, lang='en', slow=False)
