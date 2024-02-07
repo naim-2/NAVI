@@ -12,11 +12,11 @@ from io import BytesIO
 app = Flask(__name__)
 
 # Azure Cognitive Services API Key and Endpoint
-api_key = "b7bb5fe0d6da439181ed81904b28e959"
-endpoint = "https://nsalim-vision-api.cognitiveservices.azure.com/"
+api_key = "9e0adf5fbb5c4e44808a70ecf17daf07"
+endpoint = "https://nsalim-api-vision.cognitiveservices.azure.com/"
 
 account_name = "audi0st0rage"
-account_key = "bPht9P5/RhhOd/zU0o/y5Cct3OgjG1dtJwBhdi4TV25zjfgJ3OaK8D70HtPrP0Avg83bEEQRjh8x+ASt57IZvw=="
+account_key = "rGvae6a1FrcXaEzWBsGOg9I5DOqHXYz7Sng/s6sbBFqZNbSK6nNep0XQAIGKukrrlB+v1GkduAOP+AStSrJhoA=="
 container_name = "audio-files"
 
 # Create a BlobServiceClient
@@ -72,8 +72,8 @@ def generate_frames():
             if 'description' in results:
                 description = results['description']['captions'][0]['text']
 
-                # Check if 1 second have passed since the last audio generation
-                if time.time() - audio_timer >= 1:
+                # Check if 2 seconds have passed since the last audio generation
+                if time.time() - audio_timer >= 2:
                     # Convert description to speech
                     tts = gTTS(text="There is "+description, lang='en', slow=False)
                     audio_data = io.BytesIO()
