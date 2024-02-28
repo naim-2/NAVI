@@ -59,7 +59,7 @@ def analyze_frame(frame):
 
 def generate_frames():
     cap = cv2.VideoCapture(video_feed)
-    audio_timer = time.time()
+    message_timer = time.time()
 
     while True:
         success, frame = cap.read()
@@ -73,31 +73,16 @@ def generate_frames():
                 description = results['description']['captions'][0]['text']
 
                 # Check if 2 seconds have passed since the last audio generation
-                if time.time() - audio_timer >= 2:
-                    # Convert description to speech
-                    tts = gTTS(text="There is "+description, lang='en', slow=False)
-                    audio_data = io.BytesIO()
-                    tts.write_to_fp(audio_data)
-                    audio_data.seek(0)
-
-                    # Upload audio data to Azure Blob Storage
-                    current_datetime = datetime.now()
-                    current_time = current_datetime.timestamp()
-                    blob_name = f'output{str(current_time)}.mp3'
-                    blob_client = container_client.get_blob_client(blob_name)
-                    blob_client.upload_blob(audio_data.read(), content_settings=ContentSettings(content_type='audio/mpeg'))
-
-
-                    # Download audio file from Azure Blob Storage
-                    blob_client = container_client.get_blob_client(f'output{str(current_time)}.mp3')
-                    audio_data = blob_client.download_blob().readall()
-
-                    # Play the generated audio using pygame mixer
-                    pygame.mixer.music.load(BytesIO(audio_data))
-                    pygame.mixer.music.play()
+                if time.time() - message_timer >= 2:
+                    description = results['description']['captions'][0]['text']
+                    cv2.putText(frame, f"Description: {description}", 
+                                (10, 30), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 
+                                1, (255, 255, 255), 2, 
+                                cv2.LINE_AA)
                     
                     # Reset the timer
-                    audio_timer = time.time()
+                    message_timer = time.time()
 
             # Encode the frame to JPEG format
             _, buffer = cv2.imencode('.jpg', frame)
