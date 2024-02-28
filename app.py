@@ -1,13 +1,10 @@
 from flask import Flask, render_template, Response
 import requests
 import cv2
-from gtts import gTTS
 import pygame
 import time
 from datetime import datetime
-from azure.storage.blob import BlobServiceClient, ContentSettings
-import io
-from io import BytesIO
+from azure.storage.blob import BlobServiceClient
 
 app = Flask(__name__)
 
