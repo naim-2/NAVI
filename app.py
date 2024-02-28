@@ -1,10 +1,7 @@
 from flask import Flask, render_template, Response
 import requests
 import cv2
-import pygame
 import time
-from datetime import datetime
-from azure.storage.blob import BlobServiceClient
 
 app = Flask(__name__)
 
@@ -12,19 +9,8 @@ app = Flask(__name__)
 api_key = "9e0adf5fbb5c4e44808a70ecf17daf07"
 endpoint = "https://nsalim-api-vision.cognitiveservices.azure.com/"
 
-account_name = "audi0st0rage"
-account_key = "rGvae6a1FrcXaEzWBsGOg9I5DOqHXYz7Sng/s6sbBFqZNbSK6nNep0XQAIGKukrrlB+v1GkduAOP+AStSrJhoA=="
-container_name = "audio-files"
-
-# Create a BlobServiceClient
-blob_service_client = BlobServiceClient(account_url=f"https://{account_name}.blob.core.windows.net", credential=account_key)
-container_client = blob_service_client.get_container_client(container_name)
-
 # Video feed (replace 0 with the camera index if using a webcam)
 video_feed = 0
-
-# Initialize pygame mixer
-pygame.mixer.init()
 
 def analyze_frame(frame):
     # Convert the frame to bytes
