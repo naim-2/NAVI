@@ -2,6 +2,5 @@ flask
 requests
 opencv-python
 numpy
-pygame
 gunicorn
 azure-storage-blob

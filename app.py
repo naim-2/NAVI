@@ -10,7 +10,8 @@ api_key = "9e0adf5fbb5c4e44808a70ecf17daf07"
 endpoint = "https://nsalim-api-vision.cognitiveservices.azure.com/"
 
 # Video feed (replace 0 with the camera index if using a webcam)
-video_feed = 0
+# video_feed = 0
+video_feed = "video_url.mp4"
 
 def analyze_frame(frame):
     # Convert the frame to bytes
@@ -45,6 +46,10 @@ def generate_frames():
     message_timer = time.time()
 
     while True:
+        # Skip 2 seconds by setting the position of the video capture
+        cap.set(cv2.CAP_PROP_POS_MSEC, (cap.get(cv2.CAP_PROP_POS_MSEC) + 2000))
+
+        # Read the frame
         success, frame = cap.read()
         if not success:
             break
